@@ -56,6 +56,11 @@ const Navbar = () => {
                   Brands
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to="/cart" className="nav-link">
+                  Cart
+                </Link>
+              </li>
             </ul>
           )}
           <ul className="navbar-nav ms-auto mb-2 mb-lg-0">

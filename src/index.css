@@ -28,13 +28,18 @@ a:hover {
   text-decoration: none;
 }
 
+a h4, a h5, a p {
+  color: #000;
+  text-decoration: none;
+}
+
 .product:hover {
   box-shadow: var(--shadow);
   border: solid 1px var(--main-color);
 }
 
 .product .btn {
-  transition: transform 1s, opacity 1s;
+  transition: transform 0.5s, opacity 1s;
   transform: translateY(100%);
   opacity: 0;
 }

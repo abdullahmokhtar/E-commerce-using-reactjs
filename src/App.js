@@ -16,6 +16,7 @@ import NotFound from "./Components/NotFound/NotFound";
 import AuthContextProvider from "./context/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import AuthRoute from "./Components/ProtectedRoute/AuthRoute";
+import ProductDetails from "./Components/ProductDetails/ProductDetails";
 
 function App() {
   const router = createBrowserRouter([
@@ -77,6 +78,14 @@ function App() {
           element: (
             <ProtectedRoute>
               <Products />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "ProductDetails/:id",
+          element: (
+            <ProtectedRoute>
+              <ProductDetails />
             </ProtectedRoute>
           ),
         },
