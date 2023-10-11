@@ -21,7 +21,7 @@ const CategorySlider = () => {
     slidesToScroll: 3,
   };
   return (
-    <Slider {...settings} className="mb-4">
+    <Slider  {...settings} className="mb-4">
       {categories?.map((category, index) => (
         <>
           <img
@@ -31,11 +31,9 @@ const CategorySlider = () => {
             src={category.image}
             alt={category.name}
           />
-          <h5 className="ps-2 font-sm text-main">{category?.name}</h5>
+          <h5 key={index} className="font-sm text-main">{category?.name}</h5>
         </>
       ))}
-      {/* <img className="w-100" height={500} src={slide1} alt="slide" />
-        <img className="w-100" height={500} src={slide2} alt="slide" /> */}
     </Slider>
   );
 };

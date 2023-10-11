@@ -21,7 +21,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="container">
+    <>
      <MainSlider />
      <CategorySlider />
       <div className="row">
@@ -29,7 +29,7 @@ const Home = () => {
           return <Product key={product._id} product={product} />;
         })}
       </div>
-    </div>
+    </>
   );
 };
 

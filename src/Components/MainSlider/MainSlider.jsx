@@ -13,7 +13,7 @@ const MainSlider = () => {
     slidesToScroll: 1,
   };
   return (
-    <div className="main-slider">
+    <div className="container">
       <div className="row">
         <div className="col-md-9 p-0">
           <Slider {...settings}>

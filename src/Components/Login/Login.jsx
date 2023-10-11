@@ -1,9 +1,10 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import Cookies from "js-cookie";
 
 const Login = () => {
   const { setUserIsLoggedIn } = useContext(AuthContext);
@@ -14,16 +15,16 @@ const Login = () => {
     setIsLoading(true);
     setErrorMessage("");
     const { data } = await axios
-    .post("https://ecommerce.routemisr.com/api/v1/auth/signin", formik.values)
-    .catch((err) => {
-      setErrorMessage(err.response.data.message);
-      setIsLoading(false);
-    });
+      .post("https://ecommerce.routemisr.com/api/v1/auth/signin", formik.values)
+      .catch((err) => {
+        setErrorMessage(err.response.data.message);
+        setIsLoading(false);
+      });
     setIsLoading(false);
     if (data.message === "success") {
       setUserIsLoggedIn(true);
-      localStorage.setItem("token", data.token);
-      navigate("/home", {replace: true});
+      Cookies.set("token", data.token, { expires: 2 });
+      navigate("/home", { replace: true });
     }
   };
 

@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/freshcart-logo.svg";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   const { userIsLoggedIn, setUserIsLoggedIn } = useContext(AuthContext);
@@ -9,7 +10,7 @@ const Navbar = () => {
 
   const logout = () => {
     setUserIsLoggedIn(false);
-    localStorage.removeItem("token");
+    Cookies.remove("token")
     navigate("/login");
   };
   return (
