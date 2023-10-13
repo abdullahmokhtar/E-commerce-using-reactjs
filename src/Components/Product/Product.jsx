@@ -1,19 +1,34 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 function Product({ product }) {
+  const { setUserIsLoggedIn } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const addProductToCart = async () => {
-    const { data } = await axios.post(
-      "https://ecommerce.routemisr.com/api/v1/cart",
-      { productId: product.id },
-      {
-        headers: {
-          "Content-Type": "application/json",
-          token: Cookies.get("token"),
-        },
-      }
-    );
-    console.log(data);
+    const response = await axios
+      .post(
+        "https://ecommerce.routemisr.com/api/v1/cart",
+        { productId: product.id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: Cookies.get("token"),
+          },
+        }
+      )
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setUserIsLoggedIn(false);
+        Cookies.remove("token");
+        navigate("/login");
+      });
+    if (response) {
+      toast.success(response.data.message);
+    }
   };
   return (
     <div className="col-md-3" role="button">
@@ -33,7 +48,12 @@ function Product({ product }) {
             </span>
           </p>
         </Link>
-        <button onClick={addProductToCart} className="btn bg-main text-white w-100">+ Add To Cart</button>
+        <button
+          onClick={addProductToCart}
+          className="btn bg-main text-white w-100"
+        >
+          + Add To Cart
+        </button>
       </div>
     </div>
   );

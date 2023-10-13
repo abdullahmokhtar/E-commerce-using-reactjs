@@ -10,7 +10,7 @@ const Navbar = () => {
 
   const logout = () => {
     setUserIsLoggedIn(false);
-    Cookies.remove("token")
+    Cookies.remove("token");
     navigate("/login");
   };
   return (
@@ -43,6 +43,11 @@ const Navbar = () => {
                 </Link>
               </li>
               <li className="nav-item">
+                <Link to="/cart" className="nav-link">
+                  Cart
+                </Link>
+              </li>
+              <li className="nav-item">
                 <Link to="/products" className="nav-link">
                   Products
                 </Link>
@@ -55,11 +60,6 @@ const Navbar = () => {
               <li className="nav-item">
                 <Link to="/brands" className="nav-link">
                   Brands
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link to="/cart" className="nav-link">
-                  Cart
                 </Link>
               </li>
             </ul>

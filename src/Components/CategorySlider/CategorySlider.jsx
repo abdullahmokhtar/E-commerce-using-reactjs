@@ -21,18 +21,17 @@ const CategorySlider = () => {
     slidesToScroll: 3,
   };
   return (
-    <Slider  {...settings} className="mb-4">
+    <Slider {...settings} className="mb-4">
       {categories?.map((category, index) => (
-        <>
+        <React.Fragment key={index}>
           <img
-          className="w-100 px-1"
-            key={index}
+            className="w-100 px-1"
             height={200}
             src={category.image}
             alt={category.name}
           />
-          <h5 key={index} className="font-sm text-main">{category?.name}</h5>
-        </>
+          <h5 className="font-sm text-main">{category?.name}</h5>
+        </React.Fragment>
       ))}
     </Slider>
   );
