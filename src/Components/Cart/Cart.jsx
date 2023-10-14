@@ -1,120 +1,71 @@
-import axios from "axios";
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import {
+  deleteProduct,
+  getLoggedUserCart,
+  queryClient,
+  updateProduct,
+} from "../../util/http";
 
 let timerId;
 
 const Cart = () => {
-  const [cartProducts, setCartProducts] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [totalCartPrice, setTotalCartPrice] = useState("");
-  const [cartId, setCartId] = useState(null);
+  const { mutate, isLoading: isLoadingDeletion } = useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.resetQueries({ queryKey: ["cart"] });
+    },
+  });
 
-  const removeProductFromCart = async (productId) => {
-    setIsLoading(true);
-    const response = await axios.delete(
-      `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-      {
-        headers: {
-          "content-type": "application/json",
-          token: Cookies.get("token"),
-        },
-      }
-    );
-    setIsLoading(false);
-    if (response) {
-      setTotalCartPrice(response.data.data.totalCartPrice);
-      setCartProducts(response.data.data.products);
-    }
-  };
+  const { mutate: updateProductCount } = useMutation({
+    onMutate: async (data) => {
+      await queryClient.cancelQueries(["cart"]);
+      const prevCart = queryClient.getQueryData(["cart"]);
+      const newCart = { ...prevCart };
+      newCart.products[data.index].count = data.count;
+      newCart.totalCartPrice += prevCart.products[data.index].price;
+      console.log(newCart);
+      queryClient.setQueryData(["cart"], newCart);
+      clearTimeout(timerId);
+      timerId = setTimeout(() => {
+        updateProduct({ id: data.productId, count: data.count });
+      }, 500);
+      return { prevCart };
+    },
+  });
 
-  const clearCart = async () => {
-    setIsLoading(true);
-    const response = await axios.delete(
-      "https://ecommerce.routemisr.com/api/v1/cart",
-      {
-        headers: {
-          "content-type": "application/json",
-          token: Cookies.get("token"),
-        },
-      }
-    );
-    setIsLoading(false);
-    console.log(response.ok);
-    if (response) {
-      setCartProducts([]);
-      setTotalCartPrice("");
-    }
-  };
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["cart"],
+    queryFn: getLoggedUserCart,
+  });
 
-  const updateProductCount = async (productId, count, index) => {
-    const newCartProducts = [...cartProducts];
-    newCartProducts[index].count = count;
-    setCartProducts(newCartProducts);
-
-    clearTimeout(timerId);
-
-    timerId = setTimeout(async () => {
-      const response = await axios.put(
-        `https://ecommerce.routemisr.com/api/v1/cart/${productId}`,
-        { count },
-        {
-          headers: {
-            token: Cookies.get("token"),
-          },
-        }
-      );
-      console.log(response);
-      if (response) {
-        console.log(response.data.data);
-        setTotalCartPrice(response.data.data.totalCartPrice);
-        setCartProducts(response.data.data.products);
-      }
-    }, 500);
-  };
-
-  useEffect(() => {
-    const getLoggedUserCart = async () => {
-      setIsLoading(true);
-      const response = await axios
-        .get("https://ecommerce.routemisr.com/api/v1/cart", {
-          headers: { token: Cookies.get("token") },
-        })
-        .catch((err) => {
-          setIsLoading(false);
-        });
-      setIsLoading(false);
-      if (response) {
-        console.log(response.data.data);
-        setTotalCartPrice(response.data.data.totalCartPrice);
-        setCartProducts(response.data.data.products);
-        setCartId(response.data.data._id)
-      }
-    };
-    getLoggedUserCart();
-  }, []);
   return (
     <>
-      {isLoading && (
+      <Helmet>
+        <title>Cart</title>
+      </Helmet>
+      {(isLoading || isLoadingDeletion) && (
         <div className="text-center">
           <i className="fas fa-spinner fa-spin fa-2x py-5 my-5"></i>
         </div>
       )}
-      {cartProducts.length === 0 && !isLoading && (
+      {isError && !isLoading && !isLoadingDeletion && (
         <h1 className="alert alert-warning text-center my-5">
           No Products found in your cart list add more products
         </h1>
       )}
-      {!isLoading && cartProducts.length > 0 && (
+      {!isLoading && !isLoadingDeletion && data?.products?.length > 0 && (
         <div className="my-5">
           <button
             className="btn btn-outline-danger d-block ms-auto"
-            onClick={clearCart}
+            onClick={() => {
+              mutate({});
+            }}
           >
             Clear Cart
           </button>
-          {cartProducts.map((product, index) => (
+          {data.products?.map((product, index) => (
             <div
               key={product._id}
               className="cart-product shadow rounded-2 my-3"
@@ -146,7 +97,7 @@ const Cart = () => {
                   <button
                     className="btn bg-danger text-white mb-2 mx-2"
                     onClick={() => {
-                      removeProductFromCart(product.product._id);
+                      mutate({ id: product.product._id });
                     }}
                   >
                     Remove
@@ -154,11 +105,11 @@ const Cart = () => {
                   <div className="d-flex align-items-center">
                     <button
                       onClick={() => {
-                        updateProductCount(
-                          product.product._id,
-                          product.count - 1,
-                          index
-                        );
+                        updateProductCount({
+                          index,
+                          count: product.count - 1,
+                          productId: product.product._id,
+                        });
                       }}
                       className="btn bg-main text-white mx-2"
                     >
@@ -167,11 +118,11 @@ const Cart = () => {
                     <span>{product.count}</span>
                     <button
                       onClick={() => {
-                        updateProductCount(
-                          product.product._id,
-                          product.count + 1,
-                          index
-                        );
+                        updateProductCount({
+                          index,
+                          count: product.count + 1,
+                          productId: product.product._id,
+                        });
                       }}
                       className="btn bg-main text-white mx-2"
                     >
@@ -182,12 +133,15 @@ const Cart = () => {
               </div>
             </div>
           ))}
-          {totalCartPrice && (
+          {data?.totalCartPrice && (
             <div className="d-flex justify-content-between">
-              <Link to={`/address/${cartId}`} className="btn bg-main text-white">
+              <Link
+                to={`/address/${data._id}`}
+                className="btn bg-main text-white"
+              >
                 CheckOut
               </Link>
-              <p>Tota Cart Price: {totalCartPrice} EGP</p>
+              <p>Tota Cart Price: {data?.totalCartPrice} EGP</p>
             </div>
           )}
         </div>

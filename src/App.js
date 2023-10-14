@@ -3,7 +3,6 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import "./App.css";
 import Layout from "./Components/Layout/Layout";
 import Home from "./Components/Home/Home";
 import Login from "./Components/Login/Login";
@@ -17,8 +16,9 @@ import AuthContextProvider from "./context/AuthContext";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import AuthRoute from "./Components/ProtectedRoute/AuthRoute";
 import ProductDetails from "./Components/ProductDetails/ProductDetails";
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClientProvider } from "react-query";
 import Address from "./Components/Address/Address";
+import { queryClient } from "./util/http";
 
 const router = createBrowserRouter([
   {
@@ -102,8 +102,6 @@ const router = createBrowserRouter([
     ],
   },
 ]);
-
-const queryClient = new QueryClient();
 
 function App() {
   return (

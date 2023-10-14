@@ -1,32 +1,21 @@
-import axios from "axios";
 import Product from "../Product/Product";
 import MainSlider from "../MainSlider/MainSlider";
 import CategorySlider from "../CategorySlider/CategorySlider";
 import { useQuery } from "react-query";
+import { Helmet } from "react-helmet";
+import { getProducts } from "../../util/http";
 
 const Home = () => {
-  async function getAllProducts() {
-    const response = await axios.get(
-      "https://ecommerce.routemisr.com/api/v1/products"
-    );
-
-    if (response.status === null) {
-      const error = new Error("An error occurred while fetching the products");
-      error.code = response.status;
-      throw error;
-    }
-    const { data } = response;
-
-    return data;
-  }
-
   const { data, isError, isLoading } = useQuery({
     queryKey: ["products"],
-    queryFn: getAllProducts,
+    queryFn: getProducts,
   });
 
   return (
     <>
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
       <MainSlider />
       <CategorySlider />
       {isError && (
@@ -42,7 +31,7 @@ const Home = () => {
         </div>
       )}
       <div className="row">
-        {data?.data.map((product) => {
+        {data?.map((product) => {
           return <Product key={product._id} product={product} />;
         })}
       </div>

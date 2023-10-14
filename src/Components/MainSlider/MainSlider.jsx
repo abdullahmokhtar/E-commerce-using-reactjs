@@ -1,6 +1,6 @@
 import Slider from "react-slick";
 
-import slide1 from "../../assets/images/blog-img-1.jpeg";
+import slide1 from "../../assets/images/slider-image-3.jpeg";
 import slide2 from "../../assets/images/blog-img-2.jpeg";
 import img1 from "../../assets/images/1.jpg";
 import img2 from "../../assets/images/2.jpg";
@@ -11,9 +11,10 @@ const MainSlider = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    arrows: false
   };
   return (
-    <div className="container">
+    <div className="container mt-5">
       <div className="row">
         <div className="col-md-9 p-0">
           <Slider {...settings}>

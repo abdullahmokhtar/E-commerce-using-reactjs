@@ -28,7 +28,9 @@ a:hover {
   text-decoration: none;
 }
 
-a h4, a h5, a p {
+a h4,
+a h5,
+a p {
   color: #000;
   text-decoration: none;
 }
@@ -63,4 +65,13 @@ a h4, a h5, a p {
 
 .bg-main-light {
   background-color: var(--light-color) !important;
+}
+
+.card-img img {
+  object-fit: cover;
+}
+
+.card:hover {
+  box-shadow: var(--shadow);
+  border: solid 1px var(--main-color);
 }
