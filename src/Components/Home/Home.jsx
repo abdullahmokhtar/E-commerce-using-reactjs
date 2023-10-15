@@ -3,13 +3,20 @@ import MainSlider from "../MainSlider/MainSlider";
 import CategorySlider from "../CategorySlider/CategorySlider";
 import { useQuery } from "react-query";
 import { Helmet } from "react-helmet";
-import { getProducts } from "../../util/http";
+import { getLoggedUserWishList, getProducts } from "../../util/http";
 
 const Home = () => {
+  // const [isFav]
+
   const { data, isError, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
   });
+
+    const { data: wishlist } = useQuery({
+      queryFn: getLoggedUserWishList,
+      queryKey: ["wishlist"],
+    });
 
   return (
     <>
@@ -32,7 +39,7 @@ const Home = () => {
       )}
       <div className="row">
         {data?.map((product) => {
-          return <Product key={product._id} product={product} />;
+          return <Product fav={wishlist?.filter(pro => pro.id === product._id)} key={product._id} product={product} />;
         })}
       </div>
     </>

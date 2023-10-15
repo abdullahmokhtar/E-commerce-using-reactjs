@@ -2,17 +2,27 @@ import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import Slider from "react-slick";
-import { getProducts } from "../../util/http";
+import {
+  getLoggedUserWishList,
+  getProducts,
+  queryClient,
+} from "../../util/http";
 import axios from "axios";
 import Cookies from "js-cookie";
 import toast from "react-hot-toast";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const { setUserIsLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [isFav, setIsFav] = useState(false);
+
+  const { data: wishlist } = useQuery({
+    queryFn: getLoggedUserWishList,
+    queryKey: ["wishlist"],
+  });
 
   const addProductToCart = async () => {
     const response = await axios
@@ -49,6 +59,31 @@ const ProductDetails = () => {
     queryKey: ["productDetails", id],
     queryFn: () => getProducts({ id }),
   });
+
+  const addProductToWishlist = async () => {
+    const response = await axios
+      .post(
+        "https://ecommerce.routemisr.com/api/v1/wishlist",
+        { productId: id },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            token: Cookies.get("token"),
+          },
+        }
+      )
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setUserIsLoggedIn(false);
+        Cookies.remove("token");
+        navigate("/login");
+      });
+    if (response) {
+      setIsFav(true);
+      toast.success(response.data.message);
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+    }
+  };
 
   return (
     <>
@@ -96,7 +131,17 @@ const ProductDetails = () => {
                 >
                   + Add To Cart
                 </button>
-                <i className="fa-solid fa-heart h3" role="button"></i>
+                <i
+                  onClick={addProductToWishlist}
+                  className="fa-solid fa-heart h3"
+                  style={{
+                    color:
+                      wishlist?.filter((x) => x.id === id).length > 0 || isFav
+                        ? "red"
+                        : "black",
+                  }}
+                  role="button"
+                ></i>
               </div>
             </div>
           </div>

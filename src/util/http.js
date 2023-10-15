@@ -109,3 +109,67 @@ export async function getCategories() {
 
   return data.data;
 }
+
+export async function getBrands() {
+  const response = await axios
+    .get("https://ecommerce.routemisr.com/api/v1/brands")
+    .catch((err) => {
+      const error = new Error(
+        "An error occurred while fetching the categories"
+      );
+      error.code = err.response.status;
+      throw error;
+    });
+
+  if (response.status === undefined) {
+    const error = new Error("An error occurred while fetching the cart");
+    error.code = response.status;
+    throw error;
+  }
+
+  const { data } = response;
+
+  return data.data;
+}
+
+export async function getLoggedUserWishList() {
+  const response = await axios
+    .get("https://ecommerce.routemisr.com/api/v1/wishlist", {
+      headers: { token: Cookies.get("token") },
+    })
+    .catch((err) => {
+      const error = new Error("An error occurred while fetching the cart");
+      error.code = err.response.status;
+      throw error;
+    });
+
+  if (response.status === undefined) {
+    console.log("hello");
+    const error = new Error("An error occurred while fetching the cart");
+    error.code = response.status;
+    throw error;
+  }
+
+  const { data } = response;
+
+  return data.data;
+}
+
+export async function deleteProductFromWishList({ id }) {
+  const response = await axios.delete(`https://ecommerce.routemisr.com/api/v1/wishlist/${id}`, {
+    headers: { token: Cookies.get("token") },
+  });
+
+  if (response.status === null) {
+    const error = new Error(
+      "An error occurred while deleting the wishList product"
+    );
+    error.code = response.status;
+    throw error;
+  }
+
+  const { data } = response;
+
+  return data.data;
+}
+

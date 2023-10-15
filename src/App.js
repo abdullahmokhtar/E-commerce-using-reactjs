@@ -19,6 +19,7 @@ import ProductDetails from "./Components/ProductDetails/ProductDetails";
 import { QueryClientProvider } from "react-query";
 import Address from "./Components/Address/Address";
 import { queryClient } from "./util/http";
+import WishList from "./Components/WishList/WishList";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <Brands />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "wishList",
+        element: (
+          <ProtectedRoute>
+            <WishList />
           </ProtectedRoute>
         ),
       },
