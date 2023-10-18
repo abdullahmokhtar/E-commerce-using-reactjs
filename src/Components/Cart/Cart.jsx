@@ -25,7 +25,6 @@ const Cart = () => {
       const newCart = { ...prevCart };
       newCart.products[data.index].count = data.count;
       newCart.totalCartPrice += prevCart.products[data.index].price;
-      console.log(newCart);
       queryClient.setQueryData(["cart"], newCart);
       clearTimeout(timerId);
       timerId = setTimeout(() => {

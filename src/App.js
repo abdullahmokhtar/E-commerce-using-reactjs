@@ -20,6 +20,9 @@ import { QueryClientProvider } from "react-query";
 import Address from "./Components/Address/Address";
 import { queryClient } from "./util/http";
 import WishList from "./Components/WishList/WishList";
+import ForgetPassword from "./Components/ForgetPassword/ForgetPassword";
+import VerifyCode from "./Components/VerifyCode/VerifyCode";
+import ResetPassword from "./Components/ResetPassword/ResetPassword";
 
 const router = createBrowserRouter([
   {
@@ -107,6 +110,15 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "verify-code",
+        element: <VerifyCode />,
+      },
+      { path: "reset-password", element: <ResetPassword /> },
       { path: "*", element: <NotFound /> },
     ],
   },

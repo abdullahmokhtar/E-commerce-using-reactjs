@@ -10,7 +10,7 @@ function Product({ product, fav }) {
   const navigate = useNavigate();
   const [isFav, setIsFav] = useState(false);
 
-  const addProductToWishlist = async()=>{
+  const addProductToWishlist = async () => {
     const response = await axios
       .post(
         "https://ecommerce.routemisr.com/api/v1/wishlist",
@@ -31,9 +31,30 @@ function Product({ product, fav }) {
     if (response) {
       setIsFav(true);
       toast.success(response.data.message);
-      queryClient.invalidateQueries({queryKey: ["products"]});
+      queryClient.invalidateQueries({ queryKey: ["products"] });
     }
-  }
+  };
+
+  const removeProductFromWishlist = async () => {
+    const response = await axios
+      .delete(`https://ecommerce.routemisr.com/api/v1/wishlist/${product.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          token: Cookies.get("token"),
+        },
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+        setUserIsLoggedIn(false);
+        Cookies.remove("token");
+        navigate("/login");
+      });
+    if (response) {
+      setIsFav(false);
+      toast.success(response.data.message);
+      queryClient.resetQueries({ queryKey: ["wishlist"] });
+    }
+  };
 
   const addProductToCart = async () => {
     const response = await axios
@@ -66,7 +87,9 @@ function Product({ product, fav }) {
         >
           <img className="w-100" src={product.imageCover} alt={product.title} />
           <h5 className="font-sm text-main">{product.category.name}</h5>
-          <h4 className="fs-5">{product.title.split(" ").slice(0, 2).join(" ")}</h4>
+          <h4 className="fs-5">
+            {product.title.split(" ").slice(0, 2).join(" ")}
+          </h4>
           <p className="d-flex justify-content-between">
             <span className="ms-1">{product.price} EGP</span>
             <span>
@@ -82,7 +105,19 @@ function Product({ product, fav }) {
           >
             + Add To Cart
           </button>
-          <i onClick={addProductToWishlist} style={{color: fav?.length> 0 || isFav ? "red": "black"}} className="fa-solid fa-heart h3"></i>
+          {fav?.length > 0 || isFav ? (
+            <i
+              onClick={removeProductFromWishlist}
+              style={{ color: "red" }}
+              className="fa-solid fa-heart h3"
+            ></i>
+          ) : (
+            <i
+              onClick={addProductToWishlist}
+              style={{ color: "black" }}
+              className="fa-solid fa-heart h3"
+            ></i>
+          )}
         </div>
       </div>
     </div>

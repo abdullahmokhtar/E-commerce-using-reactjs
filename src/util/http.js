@@ -34,7 +34,6 @@ export async function getLoggedUserCart() {
     });
 
   if (response.status === undefined) {
-    console.log("hello");
     const error = new Error("An error occurred while fetching the cart");
     error.code = response.status;
     throw error;
@@ -99,7 +98,6 @@ export async function getCategories() {
     });
 
   if (response.status === undefined) {
-    console.log("hello");
     const error = new Error("An error occurred while fetching the cart");
     error.code = response.status;
     throw error;
@@ -144,7 +142,6 @@ export async function getLoggedUserWishList() {
     });
 
   if (response.status === undefined) {
-    console.log("hello");
     const error = new Error("An error occurred while fetching the cart");
     error.code = response.status;
     throw error;

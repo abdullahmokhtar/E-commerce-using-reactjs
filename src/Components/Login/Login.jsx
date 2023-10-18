@@ -1,7 +1,7 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Cookies from "js-cookie";
@@ -92,24 +92,31 @@ const Login = () => {
           {errorMessage && (
             <div className="alert alert-danger">{errorMessage}</div>
           )}
-
-          {!isLoading ? (
-            <button
-              disabled={!(formik.isValid && formik.dirty)}
-              type="submit"
-              className="btn bg-main text-white px-3 ms-auto d-block"
+          <div className="d-flex">
+            <Link
+              to="/forget-password"
+              className="text-main text-decoration-none"
             >
-              Login
-            </button>
-          ) : (
-            <button
-              disabled
-              type="button"
-              className="btn bg-main text-white px-3 ms-auto d-block"
-            >
-              <i className="fas fa-spin fa-spinner"> </i>
-            </button>
-          )}
+              Forget Password
+            </Link>
+            {!isLoading ? (
+              <button
+                disabled={!(formik.isValid && formik.dirty)}
+                type="submit"
+                className="btn bg-main text-white px-3 ms-auto d-block"
+              >
+                Login
+              </button>
+            ) : (
+              <button
+                disabled
+                type="button"
+                className="btn bg-main text-white px-3 ms-auto d-block"
+              >
+                <i className="fas fa-spin fa-spinner"> </i>
+              </button>
+            )}
+          </div>
         </form>
       </div>
     </>

@@ -56,6 +56,12 @@ const WishList = () => {
         <title>Wish List</title>
       </Helmet>
 
+      {(isLoading || isLoadingDeletion) && (
+        <div className="text-center">
+          <i className="fas fa-spinner fa-spin fa-2x "></i>
+        </div>
+      )}
+
       {!isLoading &&
         data?.map((product) => (
           <div key={product._id} className="cart-product shadow rounded-2 my-3">
@@ -87,7 +93,12 @@ const WishList = () => {
                 >
                   Remove
                 </button>
-                <button onClick={()=>{ addProductToCart(product._id)}} className="btn bg-success text-white w-75 mb-2 mx-2">
+                <button
+                  onClick={() => {
+                    addProductToCart(product._id);
+                  }}
+                  className="btn bg-success text-white w-75 mb-2 mx-2"
+                >
                   Add To Cart
                 </button>
               </div>

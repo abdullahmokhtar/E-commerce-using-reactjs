@@ -8,7 +8,6 @@ const Address = () => {
   const { cartId } = useParams();
 
   const order = async (shippingAddress) => {
-    console.log(Cookies.get("token"));
     const response = await axios.post(
       `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=http://localhost:3000`,
       { shippingAddress },
@@ -16,7 +15,6 @@ const Address = () => {
         headers: { token: Cookies.get("token") },
       }
     );
-    // console.log(response);
     window.location.href = response.data.session.url;
   };
   const formik = useFormik({
