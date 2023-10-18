@@ -6,8 +6,6 @@ import { Helmet } from "react-helmet";
 import { getLoggedUserWishList, getProducts } from "../../util/http";
 
 const Home = () => {
-  // const [isFav]
-
   const { data, isError, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,

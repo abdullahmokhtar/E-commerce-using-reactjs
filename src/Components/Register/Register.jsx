@@ -3,6 +3,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { Helmet } from "react-helmet";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -63,6 +64,9 @@ const Register = () => {
 
   return (
     <>
+    <Helmet>
+      <title>Register</title>
+    </Helmet>
       <div className="w-75 m-auto my-5">
         <h1>Register Now:</h1>
         <form onSubmit={formik.handleSubmit}>

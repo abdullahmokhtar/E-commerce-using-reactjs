@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import Cookies from "js-cookie";
+import { Helmet } from "react-helmet";
 
 const Login = () => {
   const { setUserIsLoggedIn } = useContext(AuthContext);
@@ -54,6 +55,9 @@ const Login = () => {
 
   return (
     <>
+    <Helmet>
+      Login 
+    </Helmet>
       <div className="w-75 m-auto my-5">
         <h1>Login Now:</h1>
         <form onSubmit={formik.handleSubmit}>
