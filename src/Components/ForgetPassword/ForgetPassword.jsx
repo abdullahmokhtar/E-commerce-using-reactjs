@@ -7,7 +7,6 @@ import * as Yup from "yup";
 
 const ForgetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -21,14 +20,12 @@ const ForgetPassword = () => {
 
   const forgetPassword = async () => {
     setIsLoading(true);
-    setErrorMessage("");
     const { data } = await axios
       .post(
         "https://ecommerce.routemisr.com/api/v1/auth/forgotPasswords",
         formik.values
       )
       .catch((err) => {
-        setErrorMessage(err.response.data.message);
         setIsLoading(false);
       });
     setIsLoading(false);
