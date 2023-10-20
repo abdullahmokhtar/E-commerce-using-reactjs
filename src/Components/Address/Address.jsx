@@ -10,7 +10,7 @@ const Address = () => {
 
   const order = async (shippingAddress) => {
     const response = await axios.post(
-      `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=http://localhost:3000`,
+      `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=https://creative-zabaione-ea1348.netlify.app`,
       { shippingAddress },
       {
         headers: { token: Cookies.get("token") },
